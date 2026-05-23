@@ -9,7 +9,7 @@ The CLI is designed for shell workflows, operational scripts, and quick ad hoc l
 Install with Go:
 
 ```bash
-go install github.com/backworkai/verity-cli/cmd/verity@latest
+go install github.com/backworkai/verity-cli/cmd/verity@v1.0.0
 ```
 
 Make sure your Go bin directory is on `PATH`, commonly `$(go env GOPATH)/bin`.
