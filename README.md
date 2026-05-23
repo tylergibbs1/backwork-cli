@@ -6,6 +6,16 @@ The CLI is designed for shell workflows, operational scripts, and quick ad hoc l
 
 ## Installation
 
+Install with Go:
+
+```bash
+go install github.com/backworkai/verity-cli/cmd/verity@latest
+```
+
+Make sure your Go bin directory is on `PATH`, commonly `$(go env GOPATH)/bin`.
+
+Build from source:
+
 ```bash
 git clone https://github.com/backworkai/verity-cli.git
 cd verity-cli
@@ -14,7 +24,7 @@ go build -o verity .
 sudo mv verity /usr/local/bin/
 ```
 
-Pre-built release binaries will be published on [GitHub Releases](https://github.com/backworkai/verity-cli/releases).
+Tagged releases publish pre-built binaries and checksums on [GitHub Releases](https://github.com/backworkai/verity-cli/releases).
 
 ## Quick Start
 
@@ -133,6 +143,12 @@ go test ./...
 go vet ./...
 go build -o verity .
 ```
+
+## Release
+
+1. Push a tag such as `v1.0.0`.
+2. The release workflow runs tests, cross-compiles macOS, Linux, and Windows binaries, writes SHA-256 checksums, and creates a GitHub Release.
+3. `go install github.com/backworkai/verity-cli/cmd/verity@latest` resolves through the public Go module proxy after the tag is indexed.
 
 ## Support
 

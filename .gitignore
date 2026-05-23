@@ -1,5 +1,5 @@
 # Binaries
-verity
+/verity
 *.exe
 dist/
 *.out

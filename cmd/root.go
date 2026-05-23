@@ -9,10 +9,11 @@ import (
 )
 
 var (
-	cfgFile string
-	apiKey  string
-	baseURL string
-	output  string
+	cfgFile   string
+	apiKey    string
+	baseURL   string
+	output    string
+	buildTime string
 )
 
 var rootCmd = &cobra.Command{
@@ -24,12 +25,18 @@ requirements, and medical code lookups from the command line.
 Get your API key from: https://verity.backworkai.com/dashboard`,
 }
 
+func SetBuildInfo(version, builtAt string) {
+	rootCmd.Version = version
+	buildTime = builtAt
+}
+
 func Execute() error {
 	return rootCmd.Execute()
 }
 
 func init() {
 	cobra.OnInitialize(initConfig)
+	rootCmd.SetVersionTemplate("verity {{.Version}}\n")
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.verity.yaml)")
 	rootCmd.PersistentFlags().StringVar(&apiKey, "api-key", "", "Verity API key (or set VERITY_API_KEY env var)")

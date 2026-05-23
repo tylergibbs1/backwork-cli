@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/backworkai/verity-cli/cmd"
+	root "github.com/backworkai/verity-cli/cmd"
 )
 
 var (
@@ -13,9 +13,9 @@ var (
 )
 
 func main() {
-	cmd.SetBuildInfo(Version, BuildTime)
+	root.SetBuildInfo(Version, BuildTime)
 
-	if err := cmd.Execute(); err != nil {
+	if err := root.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
