@@ -3,6 +3,7 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 
 	"github.com/backworkai/verity-cli/pkg/client"
 	"github.com/spf13/cobra"
@@ -22,25 +23,27 @@ var coverageSearchCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		c := client.New(getAPIKey(), getBaseURL())
 
-		path := fmt.Sprintf("/coverage/criteria?q=%s", args[0])
+		query := url.Values{}
+		query.Set("q", args[0])
 
 		section, _ := cmd.Flags().GetString("section")
 		if section != "" {
-			path += "&section=" + section
+			query.Set("section", section)
 		}
 
 		policyType, _ := cmd.Flags().GetString("type")
 		if policyType != "" {
-			path += "&policy_type=" + policyType
+			query.Set("policy_type", policyType)
 		}
 
 		jurisdiction, _ := cmd.Flags().GetString("jurisdiction")
 		if jurisdiction != "" {
-			path += "&jurisdiction=" + jurisdiction
+			query.Set("jurisdiction", jurisdiction)
 		}
 
 		limit, _ := cmd.Flags().GetInt("limit")
-		path += fmt.Sprintf("&limit=%d", limit)
+		query.Set("limit", fmt.Sprintf("%d", limit))
+		path := "/coverage/criteria?" + query.Encode()
 
 		var result map[string]interface{}
 		if err := c.Get(path, &result); err != nil {
@@ -78,12 +81,26 @@ func printCriteriaResults(result map[string]interface{}) {
 	fmt.Printf("Found %d criteria blocks:\n\n", len(data))
 	for _, c := range data {
 		criteria := c.(map[string]interface{})
-		if policyId, ok := criteria["policy_id"].(string); ok {
+		policyId, _ := criteria["policy_id"].(string)
+		policyTitle, _ := criteria["policy_title"].(string)
+		if policyId == "" {
+			if policy, ok := criteria["policy"].(map[string]interface{}); ok {
+				policyId, _ = policy["policy_id"].(string)
+				policyTitle, _ = policy["title"].(string)
+			}
+		}
+		if policyId != "" {
 			fmt.Printf("Policy: %s", policyId)
-			if title, ok := criteria["policy_title"].(string); ok {
-				fmt.Printf(" - %s", title)
+			if policyTitle != "" {
+				fmt.Printf(" - %s", policyTitle)
 			}
 			fmt.Println()
+		}
+		if policyType, ok := criteria["policy_type"].(string); ok && policyType != "" {
+			fmt.Printf("Type: %s\n", policyType)
+		}
+		if jurisdiction, ok := criteria["jurisdiction"].(string); ok && jurisdiction != "" {
+			fmt.Printf("Jurisdiction: %s\n", jurisdiction)
 		}
 		if section, ok := criteria["section"].(string); ok {
 			fmt.Printf("Section: %s\n", section)
