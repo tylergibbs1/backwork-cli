@@ -31,6 +31,7 @@ var claimsValidateCmd = &cobra.Command{
 		diagnosisCodes, _ := cmd.Flags().GetStringSlice("diagnosis")
 		modifiers, _ := cmd.Flags().GetStringSlice("modifier")
 		state, _ := cmd.Flags().GetString("state")
+		dateOfService, _ := cmd.Flags().GetString("date-of-service")
 		siteOfService, _ := cmd.Flags().GetString("site-of-service")
 		providerSpecialty, _ := cmd.Flags().GetString("provider-specialty")
 		ageCategory, _ := cmd.Flags().GetString("age-category")
@@ -55,6 +56,9 @@ var claimsValidateCmd = &cobra.Command{
 		}
 		if state != "" {
 			reqBody["state"] = state
+		}
+		if dateOfService != "" {
+			reqBody["date_of_service"] = dateOfService
 		}
 		if siteOfService != "" {
 			reqBody["site_of_service"] = siteOfService
@@ -105,6 +109,7 @@ func init() {
 	claimsValidateCmd.Flags().StringSliceP("diagnosis", "d", []string{}, "Diagnosis codes (ICD-10)")
 	claimsValidateCmd.Flags().StringSliceP("modifier", "m", []string{}, "Procedure modifiers")
 	claimsValidateCmd.Flags().StringP("state", "s", "", "Two-letter state code")
+	claimsValidateCmd.Flags().String("date-of-service", "", "Date of service (YYYY-MM-DD)")
 	claimsValidateCmd.Flags().String("site-of-service", "", "Site of service")
 	claimsValidateCmd.Flags().String("provider-specialty", "", "Provider specialty")
 	claimsValidateCmd.Flags().String("age-category", "", "Age category")
@@ -121,7 +126,7 @@ func printClaimValidationResult(result map[string]interface{}) {
 	}
 
 	fmt.Printf("Coverage Status: %v\n", data["coverage_status"])
-	fmt.Printf("Prior Auth Required: %v\n", data["prior_auth_required"])
+	fmt.Printf("Prior Auth Required: %s\n", formatNullableBool(data["prior_auth_required"]))
 	fmt.Printf("Denial Risk: %v\n", data["denial_risk"])
 	fmt.Printf("Overall Risk: %v\n", data["overall_risk"])
 	fmt.Printf("Confidence: %v\n", data["confidence"])
@@ -138,5 +143,42 @@ func printClaimValidationResult(result map[string]interface{}) {
 		for _, item := range gaps {
 			fmt.Printf("  - %v\n", item)
 		}
+	}
+
+	if issues, ok := data["issues"].([]interface{}); ok && len(issues) > 0 {
+		fmt.Println("\nIssues:")
+		for _, item := range issues {
+			fmt.Printf("  - %v\n", item)
+		}
+	}
+
+	if policies, ok := data["matched_policies"].([]interface{}); ok && len(policies) > 0 {
+		fmt.Println("\nMatched Policies:")
+		for _, item := range policies {
+			policy, ok := item.(map[string]interface{})
+			if !ok {
+				continue
+			}
+			fmt.Printf("  - %v", policy["policy_id"])
+			if title, ok := policy["title"].(string); ok && title != "" {
+				fmt.Printf(": %s", title)
+			}
+			if jurisdiction, ok := policy["jurisdiction"].(string); ok && jurisdiction != "" {
+				fmt.Printf(" (%s)", jurisdiction)
+			}
+			fmt.Println()
+		}
+	}
+}
+
+func formatNullableBool(value interface{}) string {
+	switch v := value.(type) {
+	case bool:
+		if v {
+			return "YES"
+		}
+		return "NO"
+	default:
+		return "UNKNOWN"
 	}
 }
