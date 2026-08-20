@@ -1,5 +1,5 @@
 # Binaries
-/verity
+/backwork
 *.exe
 dist/
 *.out
@@ -9,6 +9,7 @@ dist/
 *.prof
 
 # Config
+.backwork.yaml
 .verity.yaml
 .env
 

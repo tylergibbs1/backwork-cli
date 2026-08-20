@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/backworkai/verity-cli/cmd"
+	"github.com/tylergibbs1/backwork-cli/cmd"
 )
 
 var (

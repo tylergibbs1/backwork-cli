@@ -4,14 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/backworkai/verity-cli/pkg/client"
 	"github.com/spf13/cobra"
+	"github.com/tylergibbs1/backwork-cli/pkg/client"
 )
 
 var healthCmd = &cobra.Command{
 	Use:   "health",
 	Short: "Check API health status",
-	Long:  "Check the health status of the Verity API including database and Redis checks",
+	Long:  "Check the health status of the Backwork API including database and Redis checks",
 	Run: func(cmd *cobra.Command, args []string) {
 		c := client.New(getAPIKey(), getBaseURL())
 

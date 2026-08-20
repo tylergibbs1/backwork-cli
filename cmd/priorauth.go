@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/backworkai/verity-cli/pkg/client"
 	"github.com/spf13/cobra"
+	"github.com/tylergibbs1/backwork-cli/pkg/client"
 )
 
 var priorAuthCmd = &cobra.Command{
@@ -185,7 +185,7 @@ func printResearchResult(result map[string]interface{}) {
 
 	if pollURL, ok := data["poll_url"].(string); ok && pollURL != "" {
 		fmt.Printf("Poll URL: %s\n", pollURL)
-		fmt.Println("\nUse 'verity prior-auth research-status <research-id>' to check progress")
+		fmt.Println("\nUse 'backwork prior-auth research-status <research-id>' to check progress")
 	}
 
 	if resResult, ok := data["result"].(map[string]interface{}); ok {

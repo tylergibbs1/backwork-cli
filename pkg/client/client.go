@@ -57,7 +57,7 @@ func (c *Client) RequestWithHeaders(method, path string, body interface{}, resul
 	}
 
 	req.Header.Set("Authorization", "Bearer "+c.APIKey)
-	req.Header.Set("User-Agent", "verity-cli/1.0.0")
+	req.Header.Set("User-Agent", "backwork-cli/1.0.0")
 	if body != nil {
 		req.Header.Set("Content-Type", "application/json")
 	}
