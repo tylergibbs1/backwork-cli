@@ -62,11 +62,11 @@ jobs:
         run: |
           mkdir -p dist
           BUILD_TIME="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
-          go build -trimpath -ldflags "-s -w -X main.Version=${GITHUB_REF_NAME:-dev} -X main.BuildTime=${BUILD_TIME}" -o "dist/verity-${{ matrix.suffix }}" ./cmd/verity
+          go build -trimpath -ldflags "-s -w -X main.Version=${GITHUB_REF_NAME:-dev} -X main.BuildTime=${BUILD_TIME}" -o "dist/backwork-${{ matrix.suffix }}" ./cmd/backwork
 
       - uses: actions/upload-artifact@v4
         with:
-          name: verity-${{ matrix.suffix }}
+          name: backwork-${{ matrix.suffix }}
           path: dist/*
 
   release:

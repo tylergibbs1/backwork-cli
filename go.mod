@@ -1,4 +1,4 @@
-module github.com/backworkai/verity-cli
+module github.com/tylergibbs1/backwork-cli
 
 go 1.23.0
 

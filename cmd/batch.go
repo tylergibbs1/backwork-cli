@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/backworkai/verity-cli/pkg/client"
 	"github.com/spf13/cobra"
+	"github.com/tylergibbs1/backwork-cli/pkg/client"
 )
 
 var batchCmd = &cobra.Command{

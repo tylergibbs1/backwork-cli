@@ -31,7 +31,7 @@ jobs:
         run: go test ./...
 
       - name: Build
-        run: go build -trimpath -o verity .
+        run: go build -trimpath -o backwork .
 
       - name: Build go install target
-        run: go build -trimpath ./cmd/verity
+        run: go build -trimpath ./cmd/backwork
