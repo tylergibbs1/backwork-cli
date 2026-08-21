@@ -65,25 +65,11 @@ func initConfig() {
 
 	viper.SetEnvPrefix("BACKWORK")
 	viper.AutomaticEnv()
+	viper.BindEnv("api_key", "BACKWORK_API_KEY")
+	viper.BindEnv("base_url", "BACKWORK_BASE_URL")
+	viper.BindEnv("output", "BACKWORK_OUTPUT")
 
-	// Anyone who configured the CLI before the Verity -> Backwork rename still
-	// exports VERITY_*. viper.BindEnv (v1.21.0) tries the names in order and
-	// takes the first one that is set, so the new name wins and the old one
-	// keeps working instead of the CLI behaving as if it were unconfigured.
-	// Remove these once the old variables are out of everyone's shell profiles.
-	viper.BindEnv("api_key", "BACKWORK_API_KEY", "VERITY_API_KEY")
-	viper.BindEnv("base_url", "BACKWORK_BASE_URL", "VERITY_BASE_URL")
-	viper.BindEnv("output", "BACKWORK_OUTPUT", "VERITY_OUTPUT")
-
-	if err := viper.ReadInConfig(); err != nil {
-		if _, notFound := err.(viper.ConfigFileNotFoundError); notFound && cfgFile == "" {
-			// Same reason as the env vars above: users have ~/.verity.yaml on
-			// disk today. Silently ignoring it would leave the CLI looking
-			// configured-but-empty. Drop this once those files are gone.
-			viper.SetConfigName(".verity")
-			viper.ReadInConfig()
-		}
-	}
+	viper.ReadInConfig()
 }
 
 func getAPIKey() string {

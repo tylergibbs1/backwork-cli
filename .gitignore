@@ -10,7 +10,6 @@ dist/
 
 # Config
 .backwork.yaml
-.verity.yaml
 .env
 
 # IDEs
