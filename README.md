@@ -4,33 +4,26 @@ Official command line interface for the [Backwork API](https://backworkhealth.co
 
 The CLI is designed for shell workflows, operational scripts, and quick ad hoc lookups.
 
-This tool was called `verity` until recently. See [Migrating from the Verity CLI](#migrating-from-the-verity-cli) if you already have it installed.
-
 ## Installation
 
-Build from source. This works today:
+Install the latest release with Go:
 
 ```bash
-git clone https://github.com/tylergibbs1/verity-cli.git
-cd verity-cli
-go mod tidy
+go install github.com/tylergibbs1/backwork-cli/cmd/backwork@latest
+```
+
+Or build from source:
+
+```bash
+git clone https://github.com/tylergibbs1/backwork-cli.git
+cd backwork-cli
 go build -o backwork ./cmd/backwork
 sudo mv backwork /usr/local/bin/
 ```
 
-`go install` does **not** work yet:
-
-```bash
-# Fails right now: the module path was renamed but the GitHub repository
-# is still published as tylergibbs1/verity-cli, so the proxy cannot fetch it.
-go install github.com/tylergibbs1/backwork-cli/cmd/backwork@latest
-```
-
-That command starts working once the repository itself is renamed to `backwork-cli` and a tag is pushed. Until then, use the source build above.
-
 Make sure your Go bin directory is on `PATH`, commonly `$(go env GOPATH)/bin`.
 
-Tagged releases publish pre-built binaries and checksums on [GitHub Releases](https://github.com/tylergibbs1/verity-cli/releases).
+Tagged releases publish pre-built binaries and checksums on [GitHub Releases](https://github.com/tylergibbs1/backwork-cli/releases).
 
 ## Quick Start
 
@@ -45,29 +38,13 @@ backwork policies list --query "ultrasound guidance" --type LCD
 
 Get an API key from the [Backwork dashboard](https://backworkhealth.com/dashboard).
 
-## Migrating from the Verity CLI
-
-Nothing you have set up stops working. The CLI reads the new names first and falls back to the old ones.
-
-| | Old | New |
-|---|---|---|
-| Binary | `verity` | `backwork` |
-| Config file | `~/.verity.yaml` | `~/.backwork.yaml` |
-| Env vars | `VERITY_API_KEY`, `VERITY_BASE_URL`, `VERITY_OUTPUT` | `BACKWORK_API_KEY`, `BACKWORK_BASE_URL`, `BACKWORK_OUTPUT` |
-| API key prefix | `vrt_live_...` | `bwk_live_...` |
-
-- **Config file.** If `~/.backwork.yaml` does not exist, the CLI reads `~/.verity.yaml` instead. Rename the file when convenient.
-- **Environment variables.** `BACKWORK_*` is read first. If it is unset, the matching `VERITY_*` variable is used.
-- **API keys.** Your existing `vrt_live_...` keys remain valid. The API accepts both prefixes, so there is no need to rotate them. Newly issued keys use `bwk_live_...`.
-- **Binary name.** The old `verity` binary is not removed by the source build above. Delete it yourself once you have switched: `sudo rm /usr/local/bin/verity`.
-
 ## Configuration
 
 Configuration is resolved in this order:
 
 1. Command line flags
-2. Environment variables prefixed with `BACKWORK_` (falling back to `VERITY_`)
-3. `~/.backwork.yaml` (falling back to `~/.verity.yaml`)
+2. Environment variables prefixed with `BACKWORK_`
+3. `~/.backwork.yaml`
 
 ```yaml
 api_key: bwk_live_YOUR_API_KEY
@@ -168,14 +145,14 @@ go build -o backwork .
 
 ## Release
 
-1. Push a tag such as `v1.0.0`.
+1. Push a tag such as `v1.1.0`.
 2. The release workflow runs tests, cross-compiles macOS, Linux, and Windows binaries, writes SHA-256 checksums, and creates a GitHub Release.
-3. `go install github.com/tylergibbs1/backwork-cli/cmd/backwork@latest` resolves through the public Go module proxy once the GitHub repository has been renamed to `backwork-cli` and the tag is indexed. It fails before that rename.
+3. `go install github.com/tylergibbs1/backwork-cli/cmd/backwork@latest` resolves through the public Go module proxy after the tag is indexed.
 
 ## Support
 
 - Documentation: https://backworkhealth.com/docs
-- Issues: https://github.com/tylergibbs1/verity-cli/issues
+- Issues: https://github.com/tylergibbs1/backwork-cli/issues
 - Email: support@backworkhealth.com
 
 ## License
